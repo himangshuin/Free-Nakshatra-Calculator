@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nakshatra Finder | Find Your Birth Star by Number Division – Vedic Astrology Tool</title>
+<meta name="description" content="Find your Nakshatra (birth star) instantly using the Vedic remainder method. Divide any number by 27 to discover your nakshatra, ruling planet, rashi (zodiac sign), and degree range. Free online Vedic astrology calculator.">
+<meta name="keywords" content="nakshatra finder, nakshatra calculator, birth star finder, vedic astrology, nakshatra by number, 27 nakshatras, janma nakshatra, nakshatram, rashi, ruling planet, jyotish">
+<meta name="author" content="VedicCalc">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Nakshatra Finder – Vedic Birth Star Calculator">
+<meta property="og:description" content="Discover your Nakshatra using the ancient division-by-27 method. Get your ruling planet, rashi, and degree range instantly.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nakshatra Finder – Vedic Birth Star Calculator">
+<meta name="twitter:description" content="Find your Nakshatra (birth star) using ancient Vedic astrology. Divide by 27 method.">
+<link rel="canonical" href="https://nakshatra-finder.com/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --ink: #1a1410;
+  --ink-soft: #3d2f20;
+  --parchment: #f5edd8;
+  --parchment-dark: #e8d9b8;
+  --parchment-deeper: #d9c89a;
+  --gold: #c8922a;
+  --gold-light: #e5b84a;
+  --gold-pale: #f0d88a;
+  --crimson: #8b2020;
+  --teal: #1a4a42;
+  --teal-light: #2d6b5f;
+  --night: #0d0a06;
+  --night-soft: #1c1610;
+  --star: #f5e6b0;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  background: var(--night);
+  color: var(--parchment);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── STAR FIELD BACKGROUND ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(200,146,42,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(26,74,66,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(13,10,6,0) 0%, #0d0a06 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Animated stars */
+.stars-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.stars-bg span {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--star);
+  border-radius: 50%;
+  animation: twinkle var(--d, 3s) var(--delay, 0s) infinite alternate;
+  opacity: var(--op, 0.6);
+}
+@keyframes twinkle {
+  from { opacity: 0.1; transform: scale(0.8); }
+  to   { opacity: var(--op, 0.8); transform: scale(1.2); }
+}
+
+/* ─── LAYOUT ─── */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 18px 60px;
+}
+
+/* ─── HERO HEADER ─── */
+.hero {
+  text-align: center;
+  padding: 56px 20px 40px;
+}
+.hero-eyebrow {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  opacity: 0.9;
+}
+.hero h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  font-weight: 900;
+  color: var(--star);
+  line-height: 1.1;
+  text-shadow: 0 0 60px rgba(200,146,42,0.3);
+  margin-bottom: 12px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--gold-light);
+}
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--parchment-dark);
+  opacity: 0.8;
+  max-width: 520px;
+  margin: 0 auto 8px;
+  line-height: 1.6;
+}
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 24px auto;
+  max-width: 360px;
+  color: var(--gold);
+  opacity: 0.6;
+  font-size: 1.1rem;
+}
+.divider-ornament::before,
+.divider-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+/* ─── CALCULATOR PANEL ─── */
+.calc-panel {
+  background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(200,146,42,0.04) 100%);
+  border: 1px solid rgba(200,146,42,0.25);
+  border-radius: 24px;
+  padding: 36px 32px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+  margin-bottom: 28px;
+}
+
+.calc-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.input-section {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.num-input {
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(200,146,42,0.3);
+  border-radius: 14px;
+  padding: 16px 22px;
+  font-family: 'Cinzel', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--star);
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -moz-appearance: textfield;
+}
+.num-input::-webkit-inner-spin-button,
+.num-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.num-input::placeholder { color: rgba(245,230,176,0.3); font-size: 1rem; }
+.num-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(200,146,42,0.15), 0 0 20px rgba(200,146,42,0.1);
+}
+
+.btn-calc {
+  background: linear-gradient(135deg, var(--gold) 0%, #a06a18 100%);
+  border: none;
+  border-radius: 14px;
+  padding: 16px 26px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--night);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(200,146,42,0.35);
+}
+.btn-calc:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(200,146,42,0.5);
+}
+.btn-calc:active { transform: translateY(0); }
+
+/* Quick number pills */
+.quick-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.quick-pill {
+  background: rgba(200,146,42,0.1);
+  border: 1px solid rgba(200,146,42,0.25);
+  border-radius: 999px;
+  padding: 5px 16px;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.78rem;
+  color: var(--gold-pale);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+}
+.quick-pill:hover {
+  background: rgba(200,146,42,0.22);
+  border-color: var(--gold);
+}
+
+/* ─── RESULT DISPLAY ─── */
+#resultArea { min-height: 60px; }
+
+.result-wrapper {
+  animation: fadeInUp 0.4s ease both;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Remainder showcase */
+.remainder-showcase {
+  background: linear-gradient(135deg, rgba(200,146,42,0.12) 0%, rgba(26,74,66,0.12) 100%);
+  border: 1px solid rgba(200,146,42,0.3);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.rem-equation {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  color: var(--parchment-dark);
+  opacity: 0.85;
+}
+.rem-equation strong { color: var(--gold-light); font-size: 1.2rem; }
+.rem-badge {
+  background: var(--gold);
+  color: var(--night);
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  padding: 8px 22px;
+  border-radius: 999px;
+  box-shadow: 0 0 20px rgba(200,146,42,0.4);
+}
+
+/* Primary nakshatra card */
+.nak-primary {
+  background: linear-gradient(160deg, rgba(26,74,66,0.3) 0%, rgba(13,10,6,0.4) 100%);
+  border: 1px solid rgba(26,74,66,0.6);
+  border-left: 4px solid var(--teal-light);
+  border-radius: 18px;
+  padding: 26px 28px;
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 28px;
+}
+.nak-main-name {
+  grid-column: 1 / -1;
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--star);
+  border-bottom: 1px solid rgba(200,146,42,0.2);
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+}
+.nak-main-name span {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.info-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tile-label {
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.75;
+}
+.tile-value {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--parchment);
+}
+.planet-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,146,42,0.12);
+  border: 1px solid rgba(200,146,42,0.3);
+  border-radius: 999px;
+  padding: 5px 14px 5px 10px;
+  font-size: 1rem;
+  color: var(--gold-pale);
+}
+.planet-glyph {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+/* Co-ruled nakshatras */
+.co-ruled-section {
+  margin-bottom: 20px;
+}
+.section-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0.8;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(200,146,42,0.2);
+}
+.co-ruled-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.co-nak-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(200,146,42,0.15);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.co-nak-card:hover {
+  background: rgba(200,146,42,0.08);
+  border-color: rgba(200,146,42,0.35);
+}
+.co-nak-name {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  color: var(--star);
+  margin-bottom: 4px;
+}
+.co-nak-meta {
+  font-size: 0.82rem;
+  color: var(--parchment-dark);
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+/* ─── 27 NAKSHATRAS TABLE ─── */
+.table-section {
+  margin: 40px 0 32px;
+}
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--star);
+  margin-bottom: 6px;
+  text-align: center;
+}
+.section-desc {
+  text-align: center;
+  color: var(--parchment-dark);
+  opacity: 0.7;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 18px;
+  border: 1px solid rgba(200,146,42,0.2);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+thead th {
+  background: rgba(200,146,42,0.12);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  padding: 14px 14px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(8px);
+}
+tbody tr {
+  border-bottom: 1px solid rgba(200,146,42,0.07);
+  transition: background 0.15s;
+  cursor: pointer;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(200,146,42,0.07); }
+tbody tr.ketu-row   { background: rgba(100,60,20,0.12); }
+tbody tr.active-row { background: rgba(200,146,42,0.15) !important; outline: 1px solid rgba(200,146,42,0.4); }
+td {
+  padding: 11px 14px;
+  color: var(--parchment-dark);
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.82rem;
+}
+td:first-child {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: var(--gold-pale);
+  text-align: center;
+  width: 52px;
+}
+.nak-cell {
+  font-family: 'Crimson Pro', serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--star);
+}
+.planet-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-family: 'Noto Sans', sans-serif;
+}
+.p-Ketu    { background: rgba(120,80,40,0.3);  color: #e8c090; border: 1px solid rgba(120,80,40,0.5); }
+.p-Venus   { background: rgba(180,60,120,0.2); color: #f0a0c8; border: 1px solid rgba(180,60,120,0.4); }
+.p-Sun     { background: rgba(220,140,0,0.2);  color: #ffd060; border: 1px solid rgba(220,140,0,0.4); }
+.p-Moon    { background: rgba(160,200,220,0.15);color: #b0d8f0;border: 1px solid rgba(160,200,220,0.3); }
+.p-Mars    { background: rgba(200,40,40,0.18); color: #f09090; border: 1px solid rgba(200,40,40,0.4); }
+.p-Rahu    { background: rgba(60,40,100,0.3);  color: #c0a0e8; border: 1px solid rgba(60,40,100,0.5); }
+.p-Jupiter { background: rgba(60,120,60,0.2);  color: #a0e0a0; border: 1px solid rgba(60,120,60,0.4); }
+.p-Saturn  { background: rgba(80,80,100,0.25); color: #c0c0e0; border: 1px solid rgba(80,80,100,0.5); }
+.p-Mercury { background: rgba(0,160,120,0.18); color: #80e0c0; border: 1px solid rgba(0,160,120,0.35); }
+
+/* ─── FILTER BAR ─── */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+.filter-btn {
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.75rem;
+  border: 1px solid rgba(200,146,42,0.25);
+  background: transparent;
+  color: var(--parchment-dark);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: rgba(200,146,42,0.15);
+  border-color: var(--gold);
+  color: var(--gold-pale);
+}
+
+/* ─── ARTICLE ─── */
+.article-section {
+  margin: 48px 0;
+  padding: 40px 36px;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(200,146,42,0.15);
+  border-radius: 24px;
+}
+.article-section h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  color: var(--star);
+  margin-bottom: 18px;
+  line-height: 1.3;
+}
+.article-section h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  color: var(--gold-light);
+  margin: 24px 0 10px;
+}
+.article-section p {
+  color: var(--parchment-dark);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+  opacity: 0.85;
+}
+.article-section ul {
+  padding-left: 20px;
+  color: var(--parchment-dark);
+  font-size: 1rem;
+  line-height: 1.9;
+  opacity: 0.8;
+}
+
+/* ─── FAQ ─── */
+.faq-section {
+  margin: 0 0 48px;
+}
+.faq-section h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem;
+  color: var(--star);
+  text-align: center;
+  margin-bottom: 24px;
+}
+.faq-item {
+  border: 1px solid rgba(200,146,42,0.15);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.faq-q {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: none;
+  color: var(--parchment);
+  font-family: 'Crimson Pro', serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  padding: 18px 22px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background 0.15s;
+}
+.faq-q:hover { background: rgba(200,146,42,0.07); }
+.faq-q .faq-icon {
+  color: var(--gold);
+  font-size: 1.2rem;
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.faq-q.open .faq-icon { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, padding 0.2s;
+  background: rgba(0,0,0,0.15);
+}
+.faq-a.open {
+  max-height: 400px;
+  padding: 0 22px 18px;
+}
+.faq-a p {
+  color: var(--parchment-dark);
+  font-size: 0.98rem;
+  line-height: 1.75;
+  opacity: 0.8;
+  padding-top: 14px;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  text-align: center;
+  padding: 32px 20px;
+  border-top: 1px solid rgba(200,146,42,0.1);
+  color: var(--parchment-dark);
+  opacity: 0.5;
+  font-size: 0.82rem;
+  font-family: 'Noto Sans', sans-serif;
+}
+footer a { color: var(--gold); text-decoration: none; }
+.designed-by {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .calc-panel { padding: 24px 18px; }
+  .input-section { grid-template-columns: 1fr; }
+  .btn-calc { width: 100%; }
+  .nak-primary { grid-template-columns: 1fr; }
+  .co-ruled-grid { grid-template-columns: 1fr; }
+  .article-section { padding: 24px 18px; }
+  .remainder-showcase { flex-direction: column; align-items: flex-start; }
+  .hero h1 { font-size: 2rem; }
+}
+
+/* ─── COPY TOAST ─── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--gold);
+  color: var(--night);
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 999px;
+  z-index: 999;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+</style>
+
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Nakshatra Finder – Vedic Birth Star Calculator",
+  "description": "Find your Nakshatra (birth star) using the ancient division-by-27 Vedic method. Discover your ruling planet, rashi, and zodiac degree range instantly.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "Any",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "author": {"@type": "Organization", "name": "VedicCalc"}
+}
+</script>
+</head>
+
+<body>
+
+<!-- Star field -->
+<div class="stars-bg" id="starsContainer"></div>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="hero-eyebrow">✦ Vedic Jyotish ✦ Division by 27 Method ✦</p>
+    <h1>Nakshatra <em>Finder</em></h1>
+    <p class="hero-sub">Discover your birth star, ruling planet & rashi using the ancient Vedic remainder method</p>
+    <div class="divider-ornament">✦</div>
+  </header>
+
+  <!-- CALCULATOR -->
+  <main>
+    <div class="calc-panel">
+      <label class="calc-label" for="numberInput">Enter Any Number</label>
+      <div class="input-section">
+        <input type="number" id="numberInput" class="num-input" step="any" placeholder="e.g. 100, 345, 27.5…" value="100" aria-label="Enter a number to find its Nakshatra">
+        <button id="findBtn" class="btn-calc" aria-label="Calculate Nakshatra">✦ Find Nakshatra</button>
+      </div>
+      <div class="quick-pills" role="group" aria-label="Quick number examples">
+        <span class="quick-pill" data-n="27">27</span>
+        <span class="quick-pill" data-n="54">54</span>
+        <span class="quick-pill" data-n="100">100</span>
+        <span class="quick-pill" data-n="108">108</span>
+        <span class="quick-pill" data-n="360">360</span>
+        <span class="quick-pill" data-n="999">999</span>
+        <span class="quick-pill" data-n="1008">1008</span>
+        <span class="quick-pill" data-n="1440">1440</span>
+      </div>
+    </div>
+
+    <div id="resultArea" aria-live="polite"></div>
+
+    <!-- ALL 27 NAKSHATRAS TABLE -->
+    <section class="table-section" aria-labelledby="table-heading">
+      <h2 class="section-title" id="table-heading">All 27 Nakshatras — Quick Reference</h2>
+      <p class="section-desc">Click any row to calculate that nakshatra number</p>
+
+      <div class="filter-bar" role="group" aria-label="Filter by ruling planet">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="Ketu">Ketu</button>
+        <button class="filter-btn" data-filter="Venus">Venus</button>
+        <button class="filter-btn" data-filter="Sun">Sun</button>
+        <button class="filter-btn" data-filter="Moon">Moon</button>
+        <button class="filter-btn" data-filter="Mars">Mars</button>
+        <button class="filter-btn" data-filter="Rahu">Rahu</button>
+        <button class="filter-btn" data-filter="Jupiter">Jupiter</button>
+        <button class="filter-btn" data-filter="Saturn">Saturn</button>
+        <button class="filter-btn" data-filter="Mercury">Mercury</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="nakTable" aria-label="27 Nakshatras reference table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nakshatra</th>
+              <th>Degrees</th>
+              <th>Rashi</th>
+              <th>Ruler</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ARTICLE -->
+    <article class="article-section" itemscope itemtype="https://schema.org/Article">
+      <h2 itemprop="headline">What is a Nakshatra? Understanding the 27 Lunar Mansions of Vedic Astrology</h2>
+      <p itemprop="description">In Vedic astrology (<em>Jyotish Shastra</em>), the sky is divided into 27 equal segments of 13° 20' each — these are the <strong>Nakshatras</strong>, or lunar mansions. Each Nakshatra is a distinct celestial zone through which the Moon travels over the course of a lunar month. Your <em>Janma Nakshatra</em> (birth star) is determined by the position of the Moon at the exact moment of your birth, and it profoundly shapes your personality, destiny, and spiritual path.</p>
+
+      <h3>The Division-by-27 Method</h3>
+      <p>This calculator uses a numerological technique rooted in Vedic tradition: any significant number — your birth date, a sacred number, or a planetary degree — can be divided by 27, and the <strong>remainder reveals the corresponding Nakshatra</strong>. The logic is elegant: since there are 27 Nakshatras completing a full cycle, the remainder of any number ÷ 27 maps directly to one of them. A remainder of 0 is treated as 27, corresponding to <em>Revati</em>, the final Nakshatra.</p>
+
+      <h3>The Nine Planetary Rulers</h3>
+      <p>Each Nakshatra is governed by one of nine celestial bodies in Vedic astrology. Remarkably, each planet rules <strong>exactly three Nakshatras</strong> — evenly distributed across the zodiac. These nine rulers are: Ketu, Venus, Sun, Moon, Mars, Rahu, Jupiter, Saturn, and Mercury. This pattern forms the foundation of the <em>Vimshottari Dasha</em> system, the 120-year planetary period cycle used in Jyotish.</p>
+
+      <h3>Nakshatras and the Rashis (Zodiac Signs)</h3>
+      <p>The 27 Nakshatras span all 12 Rashis (zodiac signs), with each Rashi containing 2.25 Nakshatras (2 complete + one partial). For example, <em>Mesha</em> (Aries, 0°–30°) contains Ashwini, Bharani, and the first quarter of Krittika. This layered system allows for remarkable precision in astrological analysis that goes far beyond the 12-sign system alone.</p>
+
+      <h3>Practical Uses of Nakshatra Knowledge</h3>
+      <ul>
+        <li><strong>Muhurta (Auspicious Timing):</strong> Choosing the right Nakshatra for weddings, travel, business, and ceremonies</li>
+        <li><strong>Compatibility (Koota Matching):</strong> Marriage compatibility analysis using Nakshatra positions</li>
+        <li><strong>Dasha Periods:</strong> Calculating your current planetary period and sub-period</li>
+        <li><strong>Naming Rituals:</strong> In many traditions, a child is named according to the syllable of their birth Nakshatra</li>
+        <li><strong>Medical Astrology:</strong> Each Nakshatra governs specific body parts and health tendencies</li>
+        <li><strong>Spiritual Practice:</strong> Meditations, mantras, and fasting observed on one's Janma Nakshatra day</li>
+      </ul>
+
+      <h3>Why 27 (Not 28)?</h3>
+      <p>While some traditions acknowledge a 28th Nakshatra called <em>Abhijit</em> (corresponding to the star Vega), the standard Vedic system uses 27 — one for each day of the Moon's sidereal cycle (~27.32 days). The 27-Nakshatra system is the basis for all classical Jyotish texts including the <em>Brihat Parashara Hora Shastra</em> and the <em>Hora Sara</em>.</p>
+
+      <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.6; font-style: italic;">This tool is for educational and numerological purposes. For precise birth chart analysis, consult a certified Vedic astrologer with your exact birth date, time, and location.</p>
+    </article>
+
+    <!-- FAQ -->
+    <section class="faq-section" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently Asked Questions</h2>
+      <div id="faqContainer"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Nakshatra Finder — All 27 Nakshatras · Vedic Jyotish Reference Tool</p>
+    <p class="designed-by">Designed & developed with ✦ by <strong>VedicCalc</strong></p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA (verified against screenshot)
+// ═══════════════════════════════════════════════
+const NAKSHATRAS = {
+  1:  { name:"Aswini",          ruler:"Ketu",    glyph:"☋", rashi:"Mesha (Aries) ♈",         deg:"00° Ar 00′ – 13° Ar 20′" },
+  2:  { name:"Bharani",         ruler:"Venus",   glyph:"♀", rashi:"Mesha (Aries) ♈",         deg:"13° Ar 20′ – 26° Ar 40′" },
+  3:  { name:"Krittika",        ruler:"Sun",     glyph:"☉", rashi:"Vrishabha (Taurus) ♉",    deg:"26° Ar 40′ – 10° Ta 00′" },
+  4:  { name:"Rohini",          ruler:"Moon",    glyph:"☽", rashi:"Vrishabha (Taurus) ♉",    deg:"10° Ta 00′ – 23° Ta 20′" },
+  5:  { name:"Mrigashira",      ruler:"Mars",    glyph:"♂", rashi:"Mithuna (Gemini) ♊",      deg:"23° Ta 20′ – 06° Ge 40′" },
+  6:  { name:"Ardra",           ruler:"Rahu",    glyph:"☊", rashi:"Mithuna (Gemini) ♊",      deg:"06° Ge 40′ – 20° Ge 00′" },
+  7:  { name:"Purnavasu",       ruler:"Jupiter", glyph:"♃", rashi:"Karka (Cancer) ♋",        deg:"20° Ge 00′ – 03° Ca 20′" },
+  8:  { name:"Pushyami",        ruler:"Saturn",  glyph:"♄", rashi:"Karka (Cancer) ♋",        deg:"03° Ca 20′ – 16° Ca 40′" },
+  9:  { name:"Aslesha",         ruler:"Mercury", glyph:"☿", rashi:"Karka (Cancer) ♋",        deg:"16° Ca 40′ – 00° Le 00′" },
+  10: { name:"Magha",           ruler:"Ketu",    glyph:"☋", rashi:"Simha (Leo) ♌",           deg:"00° Le 00′ – 13° Le 20′" },
+  11: { name:"Purva Phalguni",  ruler:"Venus",   glyph:"♀", rashi:"Simha (Leo) ♌",           deg:"13° Le 20′ – 26° Le 40′" },
+  12: { name:"Uttara Phalguni", ruler:"Sun",     glyph:"☉", rashi:"Kanya (Virgo) ♍",         deg:"26° Le 40′ – 10° Vi 00′" },
+  13: { name:"Hasta",           ruler:"Moon",    glyph:"☽", rashi:"Kanya (Virgo) ♍",         deg:"10° Vi 00′ – 23° Vi 20′" },
+  14: { name:"Chitra",          ruler:"Mars",    glyph:"♂", rashi:"Tula (Libra) ♎",          deg:"23° Vi 20′ – 06° Li 40′" },
+  15: { name:"Swati",           ruler:"Rahu",    glyph:"☊", rashi:"Tula (Libra) ♎",          deg:"06° Li 40′ – 20° Li 00′" },
+  16: { name:"Vishakha",        ruler:"Jupiter", glyph:"♃", rashi:"Vrishchika (Scorpio) ♏",  deg:"20° Li 00′ – 03° Sc 20′" },
+  17: { name:"Anuradha",        ruler:"Saturn",  glyph:"♄", rashi:"Vrishchika (Scorpio) ♏",  deg:"03° Sc 20′ – 16° Sc 40′" },
+  18: { name:"Jyestha",         ruler:"Mercury", glyph:"☿", rashi:"Vrishchika (Scorpio) ♏",  deg:"16° Sc 40′ – 00° Sa 00′" },
+  19: { name:"Mula",            ruler:"Ketu",    glyph:"☋", rashi:"Dhanu (Sagittarius) ♐",   deg:"00° Sa 00′ – 13° Sa 20′" },
+  20: { name:"Purvashadha",     ruler:"Venus",   glyph:"♀", rashi:"Dhanu (Sagittarius) ♐",   deg:"13° Sa 20′ – 26° Sa 40′" },
+  21: { name:"Uttarashadha",    ruler:"Sun",     glyph:"☉", rashi:"Makara (Capricorn) ♑",    deg:"26° Sa 40′ – 10° Cp 00′" },
+  22: { name:"Shravana",        ruler:"Moon",    glyph:"☽", rashi:"Makara (Capricorn) ♑",    deg:"10° Cp 00′ – 23° Cp 20′" },
+  23: { name:"Dhanishta",       ruler:"Mars",    glyph:"♂", rashi:"Kumbha (Aquarius) ♒",     deg:"23° Cp 20′ – 06° Aq 40′" },
+  24: { name:"Satabhisha",      ruler:"Rahu",    glyph:"☊", rashi:"Kumbha (Aquarius) ♒",     deg:"06° Aq 40′ – 20° Aq 00′" },
+  25: { name:"Purva Bhadra",    ruler:"Jupiter", glyph:"♃", rashi:"Meena (Pisces) ♓",        deg:"20° Aq 00′ – 03° Pi 20′" },
+  26: { name:"Uttara Bhadra",   ruler:"Saturn",  glyph:"♄", rashi:"Meena (Pisces) ♓",        deg:"03° Pi 20′ – 16° Pi 40′" },
+  27: { name:"Revati",          ruler:"Mercury", glyph:"☿", rashi:"Meena (Pisces) ♓",        deg:"16° Pi 40′ – 00° Ar 00′" }
+};
+
+const PLANET_NAKSHATRAS = {
+  Ketu:[1,10,19], Venus:[2,11,20], Sun:[3,12,21], Moon:[4,13,22],
+  Mars:[5,14,23], Rahu:[6,15,24], Jupiter:[7,16,25], Saturn:[8,17,26], Mercury:[9,18,27]
+};
+
+// ═══════════════════════════════════════════════
+//  STAR FIELD
+// ═══════════════════════════════════════════════
+(function buildStars() {
+  const container = document.getElementById('starsContainer');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('span');
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --d:${2+Math.random()*4}s;
+      --delay:${Math.random()*5}s;
+      --op:${0.3+Math.random()*0.7};
+      width:${Math.random()<0.85?1:2}px;
+      height:${Math.random()<0.85?1:2}px;
+    `;
+    container.appendChild(s);
+  }
+})();
+
+// ═══════════════════════════════════════════════
+//  REMAINDER CALCULATION
+// ═══════════════════════════════════════════════
+function getRemainder(num) {
+  let r = num % 27;
+  if (r < 0) r += 27;
+  r = Math.floor(r);
+  if (r === 0) r = 27;
+  return r;
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER RESULT
+// ═══════════════════════════════════════════════
+function renderResult(inputVal) {
+  const num = parseFloat(inputVal);
+  if (isNaN(num)) {
+    document.getElementById('resultArea').innerHTML =
+      `<div style="text-align:center;padding:28px;color:#f09090;font-family:'Cinzel',serif;font-size:0.9rem;">Please enter a valid number.</div>`;
+    return;
+  }
+
+  const rem = getRemainder(num);
+  const nak = NAKSHATRAS[rem];
+  const coRuled = PLANET_NAKSHATRAS[nak.ruler].filter(r => r !== rem);
+
+  // Highlight table row
+  document.querySelectorAll('#tableBody tr').forEach(r => r.classList.remove('active-row'));
+  const targetRow = document.querySelector(`#tableBody tr[data-rem="${rem}"]`);
+  if (targetRow) {
+    targetRow.classList.add('active-row');
+    setTimeout(() => targetRow.scrollIntoView({ behavior:'smooth', block:'nearest' }), 300);
+  }
+
+  const quotient = (num / 27).toFixed(4);
+
+  document.getElementById('resultArea').innerHTML = `
+    <div class="result-wrapper">
+      <div class="remainder-showcase">
+        <div class="rem-equation">
+          <strong>${num}</strong> ÷ 27 = ${quotient}<br>
+          <span style="font-size:0.85rem;opacity:0.7;">Remainder = ${num} − (${Math.floor(Math.abs(num/27))} × 27) = <strong>${rem}</strong></span>
+        </div>
+        <div class="rem-badge">${rem} / 27</div>
+      </div>
+
+      <div class="nak-primary">
+        <div class="nak-main-name">
+          <span>Your Nakshatra</span>
+          ${nak.name}
+        </div>
+        <div class="info-tile">
+          <span class="tile-label">Ruling Planet</span>
+          <div class="planet-chip">
+            <span class="planet-glyph">${nak.glyph}</span>
+            ${nak.ruler}
+          </div>
+        </div>
+        <div class="info-tile">
+          <span class="tile-label">Rashi (Zodiac)</span>
+          <span class="tile-value">${nak.rashi}</span>
+        </div>
+        <div class="info-tile">
+          <span class="tile-label">Degree Range</span>
+          <span class="tile-value" style="font-size:0.92rem;">${nak.deg}</span>
+        </div>
+        <div class="info-tile">
+          <span class="tile-label">Nakshatra Number</span>
+          <span class="tile-value">${rem} of 27</span>
+        </div>
+      </div>
+
+      <div class="co-ruled-section">
+        <div class="section-heading">Other Nakshatras ruled by ${nak.glyph} ${nak.ruler}</div>
+        <div class="co-ruled-grid">
+          ${coRuled.map(r => `
+            <div class="co-nak-card" onclick="loadNumber(${r})" title="Calculate ${NAKSHATRAS[r].name}">
+              <div class="co-nak-name">${NAKSHATRAS[r].name}</div>
+              <div class="co-nak-meta">Remainder ${r} · ${NAKSHATRAS[r].rashi.split(' ')[0]}<br>${NAKSHATRAS[r].deg}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function loadNumber(n) {
+  document.getElementById('numberInput').value = n;
+  renderResult(n);
+  document.querySelector('.calc-panel').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ═══════════════════════════════════════════════
+//  BUILD TABLE
+// ═══════════════════════════════════════════════
+function buildTable(filter) {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+  for (let i = 1; i <= 27; i++) {
+    const n = NAKSHATRAS[i];
+    if (filter !== 'all' && n.ruler !== filter) continue;
+    const tr = document.createElement('tr');
+    tr.dataset.rem = i;
+    tr.dataset.planet = n.ruler;
+    tr.innerHTML = `
+      <td>${i}</td>
+      <td class="nak-cell">${n.name}</td>
+      <td style="font-size:0.8rem;opacity:0.8;">${n.deg}</td>
+      <td style="font-size:0.8rem;">${n.rashi}</td>
+      <td><span class="planet-badge p-${n.ruler}">${n.glyph} ${n.ruler}</span></td>
+    `;
+    tr.addEventListener('click', () => loadNumber(i));
+    tbody.appendChild(tr);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  FAQ DATA
+// ═══════════════════════════════════════════════
+const FAQS = [
+  {
+    q: "What is a Nakshatra in Vedic astrology?",
+    a: "A Nakshatra is one of 27 lunar mansions in the Vedic astrological system. Each spans 13° 20′ of the zodiac. Your Janma Nakshatra (birth star) is determined by the Moon's position at your birth and influences your personality, life events, and spiritual path."
+  },
+  {
+    q: "How does the division-by-27 method work?",
+    a: "You divide any meaningful number by 27 and take the remainder. The remainder (1–27) maps to one of the 27 Nakshatras. If the remainder is 0, it corresponds to Nakshatra 27 (Revati). This method is used in Vedic numerology to find the nakshatra resonance of dates, degrees, or any significant number."
+  },
+  {
+    q: "Why do only 9 planets rule the 27 Nakshatras?",
+    a: "Vedic astrology uses 9 celestial bodies (Grahas): Ketu, Venus, Sun, Moon, Mars, Rahu, Jupiter, Saturn, and Mercury. Each rules exactly 3 of the 27 Nakshatras — a perfect 9 × 3 = 27 arrangement. This forms the basis of the Vimshottari Dasha system, a 120-year planetary period cycle."
+  },
+  {
+    q: "What is the difference between Nakshatra and Rashi?",
+    a: "A Rashi (zodiac sign) spans 30° and there are 12 of them. A Nakshatra spans 13° 20′ and there are 27 of them. Each Rashi contains exactly 2.25 Nakshatras. Your Sun sign is your Rashi; your birth star is your Nakshatra. Nakshatra analysis provides much finer astrological resolution."
+  },
+  {
+    q: "Which is the most powerful Nakshatra?",
+    a: "Different texts highlight different Nakshatras for different purposes. Rohini (ruled by Moon) is considered highly auspicious and beloved. Magha and Mula (both ruled by Ketu) are associated with powerful ancestral and spiritual energy. The 'power' of a Nakshatra depends heavily on context — for what purpose and for whom."
+  },
+  {
+    q: "What does Ketu rule in Nakshatras?",
+    a: "Ketu rules three Nakshatras: Ashwini (1st), Magha (10th), and Mula (19th). These three are spaced exactly 9 apart, evenly across the zodiac. Ketu-ruled Nakshatras are associated with spirituality, past karma, liberation (moksha), and sudden transformation."
+  },
+  {
+    q: "Can I use my birth date number to find my Nakshatra?",
+    a: "Yes — this tool allows you to use any number. You can enter your full birth date as a number (e.g., 15081990 for August 15, 1990), your birth day number, or any sacred number. The tool divides by 27 and returns the corresponding Nakshatra. For precise astrological Janma Nakshatra, you need the Moon's exact degree at birth."
+  },
+  {
+    q: "What is Abhijit Nakshatra — why isn't it listed?",
+    a: "Abhijit is sometimes called the 28th Nakshatra, corresponding to the star Vega (near 6°–10° Capricorn). However, it is not included in the standard 27-Nakshatra system used for the Vimshottari Dasha or Nakshatra-based calculations. This tool follows the classical 27-Nakshatra system as described in Brihat Parashara Hora Shastra."
+  }
+];
+
+function buildFAQ() {
+  const container = document.getElementById('faqContainer');
+  const schema = [];
+  FAQS.forEach((faq, i) => {
+    schema.push({ "@type":"Question", "name": faq.q, "acceptedAnswer": {"@type":"Answer","text":faq.a} });
+    const item = document.createElement('div');
+    item.className = 'faq-item';
+    item.innerHTML = `
+      <button class="faq-q" aria-expanded="false" aria-controls="faq-a-${i}">
+        ${faq.q}
+        <span class="faq-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="faq-a" id="faq-a-${i}" role="region">
+        <p>${faq.a}</p>
+      </div>
+    `;
+    item.querySelector('.faq-q').addEventListener('click', function() {
+      const ans = item.querySelector('.faq-a');
+      const isOpen = ans.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-q').forEach(q => { q.classList.remove('open'); q.setAttribute('aria-expanded','false'); });
+      if (!isOpen) {
+        ans.classList.add('open');
+        this.classList.add('open');
+        this.setAttribute('aria-expanded','true');
+      }
+    });
+    container.appendChild(item);
+  });
+  // Inject FAQ schema
+  const faqSchema = document.createElement('script');
+  faqSchema.type = 'application/ld+json';
+  faqSchema.textContent = JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":schema});
+  document.head.appendChild(faqSchema);
+}
+
+// ═══════════════════════════════════════════════
+//  TOAST NOTIFICATION
+// ═══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════════
+//  EVENT LISTENERS
+// ═══════════════════════════════════════════════
+document.getElementById('findBtn').addEventListener('click', () => {
+  renderResult(document.getElementById('numberInput').value);
+});
+
+document.getElementById('numberInput').addEventListener('keypress', e => {
+  if (e.key === 'Enter') renderResult(e.target.value);
+});
+
+document.querySelectorAll('.quick-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    const n = pill.dataset.n;
+    document.getElementById('numberInput').value = n;
+    renderResult(n);
+  });
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    buildTable(btn.dataset.filter);
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+buildTable('all');
+buildFAQ();
+renderResult(100);
+</script>
+</body>
+</html>
